@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Reservation.Domain;
+using Reservation.Domain.Entities;
 using System.Reflection;
 
 namespace Reservation.Infrastructure.Persistence.Context

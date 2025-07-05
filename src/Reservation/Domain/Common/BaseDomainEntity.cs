@@ -1,5 +1,4 @@
-﻿namespace Reservation.Common;
-
+﻿namespace Reservation.Domain.Common;
 
 public class BaseDomain<T>
 {
