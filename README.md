@@ -1,2 +1,2 @@
 # Reservation
-Reservation system-based ASP. Net Core 9 
+Reservation system-based .NET 9
