@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Reservation.Common;
-using Reservation.Features.Orders;
 
-namespace Reservation.Features.Rooms
+namespace Reservation.Domain
 {
     public class Room : BaseDomain<long>
     {

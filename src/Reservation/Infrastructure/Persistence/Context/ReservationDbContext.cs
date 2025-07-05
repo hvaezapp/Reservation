@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Reservation.Features.Orders;
-using Reservation.Features.Rooms;
+using Reservation.Domain;
 using System.Reflection;
 
 namespace Reservation.Infrastructure.Persistence.Context
 {
     public class ReservationDbContext(DbContextOptions dbContextOptions) : DbContext(dbContextOptions)
     {
-        private const string DefaultSchema = "Reservation";
+        private const string DefaultSchema = "reservation";
         public const string  DefaultConnectionStringName = "SvcDbContext";
 
         public DbSet<Room> Rooms => Set<Room>();

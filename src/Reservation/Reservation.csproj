@@ -19,4 +19,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Orders\" />
+    <Folder Include="Features\Rooms\" />
+  </ItemGroup>
+
 </Project>
