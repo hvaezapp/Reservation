@@ -1,4 +1,5 @@
-﻿using Reservation.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Reservation.Domain.Entities;
 using Reservation.Features.Room.Dtos;
 using Reservation.Infrastructure.Persistence.Context;
 
@@ -13,11 +14,22 @@ namespace Reservation.Features.Room.Services
             _reservationDbContext = reservationDbContext;
         }
 
-        public async Task CreateRoom(CreateRoomRequestDto dto , CancellationToken cancellationToken)
+        public async Task Create(CreateRoomRequestDto dto , CancellationToken cancellationToken)
         {
-            var newRoom = new Domain.Entities.Room(dto.Name);
+            var newRoom = Domain.Entities.Room.Create(dto.name);
+
             _reservationDbContext.Rooms.Add(newRoom);
             await _reservationDbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<GetRoomResponseDto>> GetAll(CancellationToken cancellationToken) 
+        {
+            return (await _reservationDbContext.Rooms.ToListAsync(cancellationToken)).Select(a => new GetRoomResponseDto
+            (
+                a.Id,
+                a.Name
+            ));
+        
         }
     }
 }

@@ -15,5 +15,12 @@ namespace Reservation.Domain.Entities
         {
             Name = name;
         }
+
+        public static Room Create(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Name cannot be null or empty.", nameof(name));
+            return new Room(name);
+        }
     }
 }

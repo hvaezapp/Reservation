@@ -30,8 +30,6 @@ namespace Reservation.Domain.EntityConfiguration
                         v => v.ToDateTime(TimeOnly.MinValue),
                         v => DateOnly.FromDateTime(v)
                     );
-
-
         }
     }
 
