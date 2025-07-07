@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
+﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using RedLockNet.SERedis;
 using Reservation.Features.Order.CreateOrder.Dtos;
@@ -7,26 +7,34 @@ using Reservation.Infrastructure.Persistence.Context;
 
 namespace Reservation.Features.Order.Services
 {
-    public class OrderService(ReservationDbContext reservationDbContext , RedLockFactory redLockFactory)
+    public class OrderService(ReservationDbContext reservationDbContext, IValidator<CreateOrderRequestDto> validator, RedLockFactory redLockFactory)
     {
         private readonly ReservationDbContext _reservationDbContext = reservationDbContext;
+        public readonly IValidator<CreateOrderRequestDto> _validator = validator;
         private readonly RedLockFactory _redLockFactory = redLockFactory;
 
-
+        #region lock prerequired
         public const string CreateOrderDistributedLockPattern = "reservation:order:create:{0}";
         public static TimeSpan ExpireTime = TimeSpan.FromSeconds(20);
         public static TimeSpan WaitTime = TimeSpan.FromSeconds(5);
         public static TimeSpan RetryTime = TimeSpan.FromSeconds(3);
+        #endregion
 
 
         public async Task Create(CreateOrderRequestDto dto, CancellationToken cancellationToken)
         {
-            var resource = string.Format(CreateOrderDistributedLockPattern , dto.RequesterNationalCode);
+            var resource = string.Format(CreateOrderDistributedLockPattern, dto.RequesterNationalCode);
 
-            await using (var redLock = await _redLockFactory.CreateLockAsync(resource , ExpireTime , WaitTime , RetryTime, cancellationToken))
+            await using (var redLock = await _redLockFactory.CreateLockAsync(resource, ExpireTime, WaitTime, RetryTime, cancellationToken))
             {
                 if (!redLock.IsAcquired)
                     throw new Exception("Unexpected Error");
+
+
+                var validationResult = await _validator.ValidateAsync(dto, cancellationToken);
+                if (!validationResult.IsValid)
+                    throw new ArgumentException($"Validation Failed , Message => {validationResult.Errors.Select(s => s.ErrorMessage).First()}", nameof(dto));
+
 
                 var room = await _reservationDbContext.Rooms.FindAsync(dto.RoomId, cancellationToken);
 
@@ -52,15 +60,15 @@ namespace Reservation.Features.Order.Services
 
         public async Task<IEnumerable<GetOrderResponseDto>> GetAll(CancellationToken cancellationToken)
         {
-            return (await _reservationDbContext.Orders.Include(a => a.Room).ToListAsync(cancellationToken)).Select(a => 
+            return (await _reservationDbContext.Orders.Include(a => a.Room).ToListAsync(cancellationToken)).Select(a =>
             new GetOrderResponseDto
             (
                 a.RequesterName,
-                a.RequesterPhoneNom ,
-                a.RequesterNationalCode , 
-                a.FromDate ,
+                a.RequesterPhoneNom,
+                a.RequesterNationalCode,
+                a.FromDate,
                 a.ToDate,
-                a.RoomId ,
+                a.RoomId,
                 a.Room.Name
             ));
         }

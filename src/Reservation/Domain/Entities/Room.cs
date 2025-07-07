@@ -21,8 +21,13 @@ namespace Reservation.Domain.Entities
 
         public static Room Create(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Name cannot be null or empty.", nameof(name));
+            //validation
+
+            #region some logic
+            //if (string.IsNullOrWhiteSpace(name))
+            //    throw new ArgumentException("Name cannot be null or empty.", nameof(name));
+            #endregion
+
             return new Room(name);
         }
 

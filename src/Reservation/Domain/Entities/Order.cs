@@ -35,6 +35,11 @@ namespace Reservation.Domain.Entities
                                    DateOnly fromDate, DateOnly toDate, long roomId)
 
         {
+            //validation
+
+            #region some logic
+            /*
+             
             if (string.IsNullOrWhiteSpace(requesterName))
                 throw new ArgumentException("RequesterName cannot be null or empty.", nameof(requesterName));
 
@@ -48,10 +53,12 @@ namespace Reservation.Domain.Entities
 
 
             else if (fromDate >= toDate)
-                throw new ArgumentException("FromDate must smaller than ToDate", nameof(fromDate));
+                throw new ArgumentException("FromDate must be earlier than ToDate.", nameof(fromDate));
 
+            */
+            #endregion
 
-             return new Order(requesterName, requesterPhoneNom, requesterNationalCode, fromDate, toDate, roomId);
+            return new Order(requesterName, requesterPhoneNom, requesterNationalCode, fromDate, toDate, roomId);
         }
     }
 
