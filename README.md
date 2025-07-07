@@ -1,6 +1,6 @@
 #  Reservation 
 
-This is a ** Reservation System ** built with **ASP.NET Core 9**, designed to handle room bookings efficiently and prevent duplicate or conflicting reservations.
+This is a **Reservation System** built with **ASP.NET Core 9**, designed to handle room bookings efficiently and prevent duplicate or conflicting reservations.
 
 The project uses **Vertical Slice Architecture** to achieve better separation of concerns and maintainability.  
 To handle concurrency and avoid race conditions, it leverages **Redis** and **RedLock.net** for distributed locking.
