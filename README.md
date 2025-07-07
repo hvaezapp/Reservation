@@ -33,7 +33,7 @@ To handle concurrency and avoid race conditions, it leverages **Redis** and **Re
 
 ### Prerequisites
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+- .NET 9
 - SQL Server 
 - Redis (use Docker to run redis instance)
 
