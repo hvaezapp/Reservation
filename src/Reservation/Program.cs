@@ -1,3 +1,4 @@
+using FluentValidation;
 using Reservation.Bootstraper;
 using Scalar.AspNetCore;
 
@@ -18,3 +19,5 @@ app.UseRouting();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

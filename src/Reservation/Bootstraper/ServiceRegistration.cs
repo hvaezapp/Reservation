@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Reservation.Features.Room.Services;
 using Reservation.Infrastructure.Persistence.Context;
+using System.Reflection;
 
 namespace Reservation.Bootstraper
 {
@@ -22,6 +24,10 @@ namespace Reservation.Bootstraper
             #region commons
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
+            #endregion
+
+            #region fluent validaion
+            builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             #endregion
         }
 
