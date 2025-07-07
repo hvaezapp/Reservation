@@ -8,12 +8,15 @@ namespace Reservation.Domain.Entities
 
         public string Name { get; private set; } = null!;
 
+        public bool IsReserved { get; set; }
+
         public ICollection<Order> Orders { get; private set; } = [];
 
 
-        public Room(string name)
+        private Room(string name)
         {
             Name = name;
+            IsReserved = false;
         }
 
         public static Room Create(string name)
@@ -22,5 +25,7 @@ namespace Reservation.Domain.Entities
                 throw new ArgumentException("Name cannot be null or empty.", nameof(name));
             return new Room(name);
         }
+
+        public void Reserve() => IsReserved = true;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Reservation.Features.Order.Services;
 using Reservation.Features.Room.Services;
 using Reservation.Infrastructure.Persistence.Context;
 using System.Reflection;
@@ -19,6 +20,7 @@ namespace Reservation.Bootstraper
 
             #region ioc
             builder.Services.AddScoped<RoomService>();
+            builder.Services.AddScoped<OrderService>();
             #endregion
 
             #region commons
