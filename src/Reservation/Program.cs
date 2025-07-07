@@ -4,7 +4,11 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.RegisterServices();
+builder.RegisterCommon();
+builder.RegisterMssql();
+builder.RegisterIoc();
+builder.RegisterRedis();
+builder.RegisterRedLock();
 
 var app = builder.Build();
 
