@@ -29,7 +29,8 @@ namespace Reservation.Features.Room.Services
             return (await _reservationDbContext.Rooms.ToListAsync(cancellationToken)).Select(a => new GetRoomResponseDto
             (
                 a.Id,
-                a.Name
+                a.Name,
+                a.IsReserved
             ));
         }
     }
