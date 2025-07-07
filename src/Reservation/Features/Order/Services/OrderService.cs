@@ -47,8 +47,6 @@ namespace Reservation.Features.Order.Services
 
                 await _reservationDbContext.SaveChangesAsync(cancellationToken);
 
-
-                await Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
             }
         }
 
