@@ -46,8 +46,9 @@ namespace Reservation.Features.Order.Services
 
 
                 var newOrder = Domain.Entities.Order.Create(dto.RequesterName, dto.RequesterPhoneNom,
-                                                            dto.RequesterNationalCode, dto.FromDate,
-                                                            dto.ToDate, dto.RoomId);
+                                                            dto.RequesterEmail, dto.RequesterNationalCode,
+                                                            dto.FromDate, dto.ToDate, dto.RoomId);
+
 
                 _reservationDbContext.Orders.Add(newOrder);
 
@@ -55,22 +56,26 @@ namespace Reservation.Features.Order.Services
 
                 await _reservationDbContext.SaveChangesAsync(cancellationToken);
 
+                // add to Outbox table
+
+
             }
         }
 
         public async Task<IEnumerable<GetOrderResponseDto>> GetAll(CancellationToken cancellationToken)
         {
-            return (await _reservationDbContext.Orders.Include(a => a.Room).ToListAsync(cancellationToken)).Select(a =>
-            new GetOrderResponseDto
-            (
-                a.RequesterName,
-                a.RequesterPhoneNom,
-                a.RequesterNationalCode,
-                a.FromDate,
-                a.ToDate,
-                a.RoomId,
-                a.Room.Name
-            ));
+            return (await _reservationDbContext.Orders.Include(a => a.Room).Select(a =>
+                    new GetOrderResponseDto
+                    (
+                        a.RequesterName,
+                        a.RequesterPhoneNom,
+                        a.RequesterNationalCode,
+                        a.FromDate,
+                        a.ToDate,
+                        a.RoomId,
+                        a.Room.Name
+
+                    )).ToListAsync(cancellationToken));
         }
     }
 }

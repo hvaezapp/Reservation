@@ -3,8 +3,9 @@
 namespace Reservation.Features.Order.CreateOrder.Dtos;
 
 public record CreateOrderRequestDto(string RequesterName, string RequesterPhoneNom,
-                                    string RequesterNationalCode, DateOnly FromDate,
-                                    DateOnly ToDate, long RoomId);
+                                    string RequesterEmail, string RequesterNationalCode,
+                                    DateOnly FromDate, DateOnly ToDate, long RoomId);
+
 
 
 public class CreateOrderRequestDtoValidatator : AbstractValidator<CreateOrderRequestDto>
@@ -24,6 +25,11 @@ public class CreateOrderRequestDtoValidatator : AbstractValidator<CreateOrderReq
             .WithMessage("Phone number is required.")
             .Matches(@"^\d{11}$")
             .WithMessage("Phone number must be exactly 11 digits without country code.");
+
+
+        RuleFor(x => x.RequesterEmail)
+          .NotEmpty()
+          .WithMessage("Email is required.");
 
 
         RuleFor(x => x.RequesterNationalCode)

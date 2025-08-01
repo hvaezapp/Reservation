@@ -26,12 +26,13 @@ namespace Reservation.Features.Room.Services
 
         public async Task<IEnumerable<GetRoomResponseDto>> GetAll(CancellationToken cancellationToken)
         {
-            return (await _reservationDbContext.Rooms.ToListAsync(cancellationToken)).Select(a => new GetRoomResponseDto
+            return (await _reservationDbContext.Rooms.Select(a => new GetRoomResponseDto
             (
                 a.Id,
                 a.Name,
                 a.IsReserved
-            ));
+
+            )).ToListAsync(cancellationToken));
         }
     }
 }
