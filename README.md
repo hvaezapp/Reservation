@@ -3,16 +3,18 @@
 This is a **Reservation System** built with **ASP.NET Core 9**, designed to handle room bookings efficiently and prevent duplicate or conflicting reservations.
 
 The project uses **Vertical Slice Architecture** to achieve better separation of concerns and maintainability.  
-To handle concurrency and avoid race conditions, it leverages **Redis** and **RedLock.net** for distributed locking.
+To handle concurrency and avoid race conditions, it leverages **Redis** and **RedLock.net** for distributed locking.  
+It also implements the **Outbox Pattern** to ensure reliable and consistent delivery of notification messages to **RabbitMQ**, enabling eventual consistency in a distributed environment.
 
 ---
 
 ## ✨ Features
 
-- Vertical Slice Architecture for better scalability and modular design
-- Prevents race conditions and duplicate reservations using Redis and RedLock
-- Fluent input validation using **FluentValidation**
-- Data persistence using **Entity Framework Core** with **SQL Server**
+- Vertical Slice Architecture for better scalability and modular design  
+- Prevents race conditions and duplicate reservations using Redis and RedLock  
+- Reliable message delivery using the **Outbox Pattern** with **RabbitMQ**  
+- Fluent input validation using **FluentValidation**  
+- Data persistence using **Entity Framework Core** with **SQL Server**  
 - Clean, extensible structure for handling different reservation scenarios
 
 ---
@@ -23,8 +25,11 @@ To handle concurrency and avoid race conditions, it leverages **Redis** and **Re
 - **ASP.NET Core**
 - **Entity Framework Core**
 - **SQL Server**
-- **Redis** (for distributed lock)
-- **RedLock.net** (distributed locking library)
+- **Redis** (for distributed locking)
+- **RedLock.net**
+- **RabbitMQ** (as message broker)
+- **Outbox Pattern** (for reliable event/message delivery)
+- **Background Worker** (to dispatch Outbox messages to RabbitMQ)
 - **FluentValidation**
 
 ---
@@ -33,8 +38,9 @@ To handle concurrency and avoid race conditions, it leverages **Redis** and **Re
 
 ### Prerequisites
 
-- .NET 9
-- SQL Server 
-- Redis (use Docker to run redis instance)
+- .NET 9  
+- SQL Server  
+- Redis (use Docker to run Redis instance)  
+- RabbitMQ (can also be run via Docker)
 
 ---
