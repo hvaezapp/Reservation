@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using RedLockNet.SERedis;
 using RedLockNet.SERedis.Configuration;
@@ -7,6 +8,7 @@ using Reservation.Features.Room.Services;
 using Reservation.Infrastructure.Persistence.Context;
 using StackExchange.Redis;
 using System.Reflection;
+using Reservation.Shared;
 
 namespace Reservation.Bootstraper
 {
@@ -56,6 +58,30 @@ namespace Reservation.Bootstraper
                 return RedLockFactory.Create([lockMultiplexer]);
             });
         }
+        
+        public static void RegisterBroker(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddMassTransit(configure =>
+            {
+                var brokerConfig = builder.Configuration
+                                            .GetSection(BrokerSetting.SectionName)
+                                            .Get<BrokerSetting>();
+                if (brokerConfig is null)
+                    throw new ArgumentNullException(nameof(BrokerSetting),"Broker setting not found");
+
+                configure.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(brokerConfig.Host, hostConfigure =>
+                    {
+                        hostConfigure.Username(brokerConfig.Username);
+                        hostConfigure.Password(brokerConfig.Password);
+                    });
+
+                    cfg.ConfigureEndpoints(context);
+                });
+            });
+        }
+      
     }
 
 }

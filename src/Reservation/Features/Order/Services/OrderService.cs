@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using RedLockNet.SERedis;
 using Reservation.Features.Order.CreateOrder.Dtos;
+using Reservation.Features.Order.CreateOrder.Endpoint;
 using Reservation.Features.Order.GetAllOrder.Dtos;
 using Reservation.Infrastructure.Persistence.Context;
+using System.Text.Json;
 
 namespace Reservation.Features.Order.Services
 {
@@ -36,28 +38,49 @@ namespace Reservation.Features.Order.Services
                     throw new ArgumentException($"Validation Failed , Message => {validationResult.Errors.Select(s => s.ErrorMessage).First()}", nameof(dto));
 
 
-                var room = await _reservationDbContext.Rooms.FindAsync(dto.RoomId, cancellationToken);
+                var selectedRoom = await _reservationDbContext.Rooms.FindAsync(dto.RoomId, cancellationToken);
 
-                if (room is null)
+                if (selectedRoom is null)
                     throw new Exception("Selected Room Not Found, RoomId Invalid");
 
-                if (room.IsReserved)
+                if (selectedRoom.IsReserved)
                     throw new Exception("Requester Can't Reserve this Room, Becuase this Room Reserved Before");
 
+                try
+                {
+                    // begin transaction
+                    await _reservationDbContext.Database.BeginTransactionAsync(cancellationToken);
+                    
+                    var newOrder = Domain.Entities.Order.Create(dto.RequesterName, dto.RequesterPhoneNom,
+                                                                dto.RequesterEmail, dto.RequesterNationalCode,
+                                                                dto.FromDate, dto.ToDate, dto.RoomId);
 
-                var newOrder = Domain.Entities.Order.Create(dto.RequesterName, dto.RequesterPhoneNom,
-                                                            dto.RequesterEmail, dto.RequesterNationalCode,
-                                                            dto.FromDate, dto.ToDate, dto.RoomId);
+
+                    // add new order to db
+                    await _reservationDbContext.Orders.AddAsync(newOrder, cancellationToken);
+
+                    // set selected room to reserve status
+                    selectedRoom.Reserve();
+
+                    var message = JsonSerializer.Serialize(new OrderCreatedOutboxRequest(
+                                                           dto.RequesterPhoneNom,
+                                                           dto.RequesterEmail,
+                                                           MessageType.OrderCreated));
+                    // add to Outbox table
+                    await _reservationDbContext.Outboxs.AddAsync(new Domain.Entities.Outbox
+                    {
+                        Message = message
+
+                    }, cancellationToken);
 
 
-                _reservationDbContext.Orders.Add(newOrder);
-
-                room.Reserve();
-
-                await _reservationDbContext.SaveChangesAsync(cancellationToken);
-
-                // add to Outbox table
-
+                    await _reservationDbContext.SaveChangesAsync(cancellationToken);
+                    await _reservationDbContext.Database.CommitTransactionAsync(cancellationToken);
+                }
+                catch 
+                {
+                   await _reservationDbContext.Database.RollbackTransactionAsync(cancellationToken);
+                }
 
             }
         }

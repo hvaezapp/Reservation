@@ -9,6 +9,7 @@ builder.RegisterMssql();
 builder.RegisterIoc();
 builder.RegisterRedis();
 builder.RegisterRedLock();
+builder.RegisterBroker();
 
 var app = builder.Build();
 
