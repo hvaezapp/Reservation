@@ -2,23 +2,28 @@
 {
     public class Outbox
     {
-        public int Id { get;  set; }
-        public required string Message { get;  set; }
+        public long Id { get; set; }
+        public string Message { get; set; } = null!;
+        public MessageType MessageType { get; set; }
+        public EventType EventType { get; set; }
+        public bool IsProcessed { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime? ProcessOn { get; set; }
+        public int RetryCount { get; set; }
+        public string ErrorMessage { get; set; } = null!;
+
     }
 }
 
-public enum OutboxType
+public enum EventType
 {
-    Notification
+    Notification,
+    Integration,
+    Logging
 }
 
 public enum MessageType
 {
-    OrderCreated
+    ReservationCompleted
 }
-
-public record OrderCreatedOutboxRequest
-                    (string RequesterPhoneNom , 
-                     string RequesterEmail ,
-                     MessageType MessageType);
 

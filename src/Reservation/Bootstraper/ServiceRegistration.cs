@@ -6,9 +6,10 @@ using RedLockNet.SERedis.Configuration;
 using Reservation.Features.Order.Services;
 using Reservation.Features.Room.Services;
 using Reservation.Infrastructure.Persistence.Context;
+using Reservation.Services;
+using Reservation.Shared;
 using StackExchange.Redis;
 using System.Reflection;
-using Reservation.Shared;
 
 namespace Reservation.Bootstraper
 {
@@ -41,6 +42,11 @@ namespace Reservation.Bootstraper
             builder.Services.AddScoped<OrderService>();
         }
 
+        public static void RegisterHostedService(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddHostedService<OutboxPublisherService>();
+        }
+
         public static void RegisterRedis(this WebApplicationBuilder builder)
         {
             var RedisConnectionString = builder.Configuration.GetConnectionString("Redis");
@@ -58,7 +64,7 @@ namespace Reservation.Bootstraper
                 return RedLockFactory.Create([lockMultiplexer]);
             });
         }
-        
+
         public static void RegisterBroker(this WebApplicationBuilder builder)
         {
             builder.Services.AddMassTransit(configure =>
@@ -67,7 +73,7 @@ namespace Reservation.Bootstraper
                                             .GetSection(BrokerSetting.SectionName)
                                             .Get<BrokerSetting>();
                 if (brokerConfig is null)
-                    throw new ArgumentNullException(nameof(BrokerSetting),"Broker setting not found");
+                    throw new ArgumentNullException(nameof(BrokerSetting), "Broker setting not found");
 
                 configure.UsingRabbitMq((context, cfg) =>
                 {
@@ -81,7 +87,7 @@ namespace Reservation.Bootstraper
                 });
             });
         }
-      
+
     }
 
 }
