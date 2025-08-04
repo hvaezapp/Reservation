@@ -11,6 +11,7 @@ namespace Reservation.Infrastructure.Persistence.Context
 
         public DbSet<Room> Rooms => Set<Room>();
         public DbSet<Order> Orders => Set<Order>();
+        public DbSet<Outbox> Outboxs => Set<Outbox>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

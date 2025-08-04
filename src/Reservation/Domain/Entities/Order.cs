@@ -8,6 +8,7 @@ namespace Reservation.Domain.Entities
 
         public string RequesterName { get; private set; } = null!;
         public string RequesterPhoneNom { get; private set; } = null!;
+        public string RequesterEmail { get; private set; } = null!;
         public string RequesterNationalCode { get; private set; } = null!;
         public DateOnly FromDate { get; private set; }
         public DateOnly ToDate { get; private set; }
@@ -18,12 +19,15 @@ namespace Reservation.Domain.Entities
 
 
 
-        private Order(string requesterName, string requesterPhoneNom, string requesterNationalCode,
-                     DateOnly fromDate, DateOnly toDate, long roomId)
+        private Order(string requesterName, string requesterPhoneNom, 
+                      string requesterEmail, string requesterNationalCode ,
+                      DateOnly fromDate, DateOnly toDate, long roomId)
+
         {
             RequesterName = requesterName;
             RequesterPhoneNom = requesterPhoneNom;
             RequesterNationalCode = requesterNationalCode;
+            RequesterEmail = requesterEmail;
             FromDate = fromDate;
             ToDate = toDate;
             RoomId = roomId;
@@ -31,7 +35,8 @@ namespace Reservation.Domain.Entities
 
 
 
-        public static Order Create(string requesterName, string requesterPhoneNom, string requesterNationalCode,
+        public static Order Create(string requesterName, string requesterPhoneNom,
+                                   string requesterEmail,string requesterNationalCode,
                                    DateOnly fromDate, DateOnly toDate, long roomId)
 
         {
@@ -58,7 +63,9 @@ namespace Reservation.Domain.Entities
             */
             #endregion
 
-            return new Order(requesterName, requesterPhoneNom, requesterNationalCode, fromDate, toDate, roomId);
+            return new Order(requesterName, requesterPhoneNom , 
+                             requesterEmail , requesterNationalCode,
+                             fromDate, toDate, roomId);
         }
     }
 

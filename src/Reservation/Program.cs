@@ -1,4 +1,3 @@
-using FluentValidation;
 using Reservation.Bootstraper;
 using Scalar.AspNetCore;
 
@@ -9,6 +8,8 @@ builder.RegisterMssql();
 builder.RegisterIoc();
 builder.RegisterRedis();
 builder.RegisterRedLock();
+builder.RegisterBroker();
+builder.RegisterHostedService();
 
 var app = builder.Build();
 
