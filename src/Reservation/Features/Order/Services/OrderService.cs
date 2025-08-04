@@ -66,7 +66,7 @@ namespace Reservation.Features.Order.Services
 
                 var notificationEvent = new NotificationEvent(dto.RequesterPhoneNom,
                                                               dto.RequesterEmail,
-                                                              MessageType.ReservationCompleted);
+                                                              TemplateType.ReservationCompleted);
 
                 // add to Outbox table
                 await _reservationDbContext.Outboxs.AddAsync(new Outbox

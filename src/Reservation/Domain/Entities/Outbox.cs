@@ -4,7 +4,7 @@
     {
         public long Id { get; set; }
         public string Message { get; set; } = null!;
-        public MessageType MessageType { get; set; }
+        public TemplateType TemplateType { get; set; }
         public EventType EventType { get; set; }
         public bool IsProcessed { get; set; }
         public DateTime CreatedOn { get; set; }
@@ -22,7 +22,7 @@ public enum EventType
     Logging
 }
 
-public enum MessageType
+public enum TemplateType
 {
     ReservationCompleted
 }
